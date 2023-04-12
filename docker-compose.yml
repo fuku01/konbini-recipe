@@ -6,7 +6,7 @@ services:
     volumes:
       #mysql.cnfを反映させるためのディレクトリ
       - ./mysql/conf.d:/etc/mysql/conf.d #DBの実体を残したい場合にはコメントアウトを外す
-      # - ./mysql/data:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQL_PASSWORD
       MYSQL_DATABASE: $MYSQL_DATABASE
@@ -16,7 +16,7 @@ services:
     container_name: konbin-recipe-api
     # Dockerfile のあるディレクトリのパスを指定（imageかbuildを必ず指定する必要がある）
     build: .
-    command: /bin/bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 50000 -b '0.0.0.0'"
+    command: /bin/bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8000 -b '0.0.0.0'"
     tty: true # コンテナの永続化
     environment:
       MYSQL_USER: $MYSQL_USER
@@ -30,7 +30,7 @@ services:
       - .:/myapp
     # ポートの指定（外部からのアクセス時のポート：Dockerコンテナからアクセス時のポート）
     ports:
-      - "50000:50000"
+      - "8000:8000"
     # 依存関係の指定（dbが起動した後に、webが起動するようになる）
     depends_on:
       - db
