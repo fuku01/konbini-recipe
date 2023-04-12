@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_06_131011) do
-  create_table "articles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2023_04_07_033455) do
+  create_table "todos", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
-    t.string "text"
+    t.text "content"
+    t.boolean "completed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

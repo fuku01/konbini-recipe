@@ -18,7 +18,7 @@ RUN bundle install
 COPY . /myapp
 
 # ポート番号の設定
-EXPOSE 50000
+EXPOSE 8000
 
 # コンテナ起動時に実行されるコマンド
 CMD ["rails", "server", "-b", "0.0.0.0"]
