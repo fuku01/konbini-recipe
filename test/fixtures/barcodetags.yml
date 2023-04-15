@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  recipe: one
+  barcode: MyString
+  name: MyString
+
+two:
+  recipe: two
+  barcode: MyString
+  name: MyString
