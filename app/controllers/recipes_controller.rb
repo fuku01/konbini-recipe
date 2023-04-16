@@ -19,8 +19,9 @@ class RecipesController < ApplicationController
     recipe = Recipe.new(recipe_params)
 
     if recipe.save
-      render json: recipe, status: :created, location: recipe
+      render json: recipe, status: :created
     else
+      puts recipe.errors.inspect # Add this line to output error messages
       render json: recipe.errors, status: :unprocessable_entity
     end
   end
@@ -48,6 +49,6 @@ class RecipesController < ApplicationController
 
   # レシピの情報を受け取る際に、許可されたパラメータのみを受け取るようにする
   def recipe_params
-    params.require(:recipe).permit(:user_id, :title, :content, :time, :calorie, :image)
+    params.require(:recipe).permit(:user_id, :title, :content, :time, :price, :calorie, :image)
   end
 end
