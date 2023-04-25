@@ -1,4 +1,8 @@
 class UsersController < ApplicationController
+  # ユーザー認証をスキップする(createのアクションのみ)
+  skip_before_action :authenticate_user!, only: [:create]
+
+  # ユーザー登録ページを表示し、JSON形式で返す
   # GET /users
   # 全てのユーザを取得し、JSON形式で返す
   def index
@@ -16,8 +20,10 @@ class UsersController < ApplicationController
   # POST /users
   # 新しいユーザを作成し、JSON形式で返す
   def create
-    user = User.new(user_params)
-
+    token = params[:id_token]
+    # トークンの解析をする
+    payload, header = JWT.decode(token, nil, false)
+    user = User.new(firebase_uid: payload["user_id"])
     if user.save
       render json: user, status: :created
     else
@@ -48,6 +54,6 @@ class UsersController < ApplicationController
 
   # ユーザの情報を受け取る際に、許可されたパラメータのみを受け取るようにする
   def user_params
-    params.require(:user).permit(:name, :firebase_uid, :image)
+    params.require(:user).permit(:firebase_uid)
   end
 end
