@@ -13,11 +13,19 @@ class RecipesController < ApplicationController
     render json: recipe
   end
 
+  # GET /recipes/user/1
+  # recipe.user_id = 1のレシピを取得し、JSON形式で返す
+  def show_user_recipes
+    recipes = Recipe.where(user_id: @current_user.id) # 仮で１を入れている、後にログインしているユーザーを取得するように修正する予定！！！
+    render json: recipes
+  end
+
   # POST /recipes
   # 新しいレシピを作成し、JSON形式で返す
   def create
     recipe = Recipe.new(recipe_params)
-
+    # 仮で１を入れている、後にログインしているユーザーを取得するように修正する予定！！！
+    recipe.user_id = @current_user.id
     if recipe.save
       render json: recipe, status: :created
     else
@@ -49,6 +57,6 @@ class RecipesController < ApplicationController
 
   # レシピの情報を受け取る際に、許可されたパラメータのみを受け取るようにする
   def recipe_params
-    params.require(:recipe).permit(:user_id, :title, :content, :time, :price, :calorie, :image)
+    params.require(:recipe).permit(:title, :content, :time, :price, :calorie, :image)
   end
 end
