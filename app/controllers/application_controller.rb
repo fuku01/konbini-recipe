@@ -3,6 +3,7 @@ class ApplicationController < ActionController::API
 
   private
 
+  # ユーザー認証
   def authenticate_user
     # リクエストヘッダーからJWTトークンを取得
     token = request.headers['Authorization']&.sub(/^Bearer /, '') # JWTトークンのペイロードを検証
