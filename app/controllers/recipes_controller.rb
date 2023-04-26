@@ -13,10 +13,10 @@ class RecipesController < ApplicationController
     render json: recipe
   end
 
-  # GET /recipes/user/1
-  # recipe.user_id = 1のレシピを取得し、JSON形式で返す
+  # GET /user_recipes
+  # ログイン中のユーザーのマイレシピを取得し、JSON形式で返す
   def show_user_recipes
-    recipes = Recipe.where(user_id: @current_user.id) # 仮で１を入れている、後にログインしているユーザーを取得するように修正する予定！！！
+    recipes = Recipe.where(user_id: @current_user.id)
     render json: recipes
   end
 
@@ -24,7 +24,6 @@ class RecipesController < ApplicationController
   # 新しいレシピを作成し、JSON形式で返す
   def create
     recipe = Recipe.new(recipe_params)
-    # 仮で１を入れている、後にログインしているユーザーを取得するように修正する予定！！！
     recipe.user_id = @current_user.id
     if recipe.save
       render json: recipe, status: :created
