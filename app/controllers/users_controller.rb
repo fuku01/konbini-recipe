@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   # ユーザー認証をスキップする(createのアクションのみ)
-  skip_before_action :authenticate_user!, only: [:create]
+  skip_before_action :authenticate_user, only: [:create]
 
   # ユーザー登録ページを表示し、JSON形式で返す
   # GET /users

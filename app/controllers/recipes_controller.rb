@@ -1,8 +1,11 @@
 class RecipesController < ApplicationController
+  # ユーザー認証をスキップする
+  skip_before_action :authenticate_user, only: [:index]
+
   # GET /recipes
-  # 全てのレシピを取得し、JSON形式で返す
+  # 全てのレシピを作成日の降順で取得し、JSON形式で返す
   def index
-    recipes = Recipe.all
+    recipes = Recipe.all.order(created_at: :desc)
     render json: recipes
   end
 
