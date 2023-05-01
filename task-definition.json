@@ -1,0 +1,69 @@
+{
+    "family": "konbini-recipe-task-family",
+    "executionRoleArn": "arn:aws:iam::770946742299:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::770946742299:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "containerDefinitions": [
+        {
+            "name": "api",
+            "image": "770946742299.dkr.ecr.ap-northeast-1.amazonaws.com/konbini-recipe-ecr",
+            "cpu": 512,
+            "memory": 1024,
+            "memoryReservation": 512,
+            "essential": true,
+            "portMappings": [
+                {
+                    "name": "api-8000-tcp",
+                    "containerPort": 8000,
+                    "hostPort": 8000,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "secrets": [
+                {
+                    "name": "MYSQL_USER",
+                    "valueFrom": "MYSQL_USER"
+                },
+                {
+                    "name": "MYSQL_PASSWORD",
+                    "valueFrom": "MYSQL_PASSWORD"
+                },
+                {
+                    "name": "MYSQL_DATABASE",
+                    "valueFrom": "MYSQL_DATABASE"
+                },
+                {
+                    "name": "MYSQL_PORT",
+                    "valueFrom": "MYSQL_PORT"
+                },
+                {
+                    "name": "MYSQL_DATABASE_TEST",
+                    "valueFrom": "MYSQL_DATABASE_TEST"
+                },
+                {
+                    "name": "MYSQL_HOST",
+                    "valueFrom": "MYSQL_HOST"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-create-group": "true",
+                    "awslogs-group": "/ecs/konbini-recipe-task-family",
+                    "awslogs-region": "ap-northeast-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "cpu": "512",
+    "memory": "1024"
+}
