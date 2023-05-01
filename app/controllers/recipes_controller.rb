@@ -40,11 +40,14 @@ class RecipesController < ApplicationController
   # 指定されたIDのレシピ情報を更新し、JSON形式で返す
   def update
     recipe = Recipe.find(params[:id])
-
-    if recipe.update(recipe_params)
-      render json: recipe
+    if recipe.user_id == @current_user.id
+      if recipe.update(recipe_params)
+        render json: recipe
+      else
+        render json: recipe.errors, status: :unprocessable_entity
+      end
     else
-      render json: recipe.errors, status: :unprocessable_entity
+      render json: { error: 'このレシピの編集権限がありません' }, status: :forbidden
     end
   end
 
@@ -52,7 +55,11 @@ class RecipesController < ApplicationController
   # 指定されたIDのレシピを削除する
   def destroy
     recipe = Recipe.find(params[:id])
-    recipe.destroy
+    if recipe.user_id == @current_user.id
+      recipe.destroy
+    else
+      render json: { error: 'このレシピの削除権限がありません' }, status: :forbidden
+    end
   end
 
   private
