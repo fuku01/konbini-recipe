@@ -17,11 +17,10 @@ class UsersController < ApplicationController
     render json: user
   end
 
-  # GET /current_user
-  # ログインしているユーザを取得し、JSON形式で返す
+  # GET /me
+  # ログインしているユーザを取得し、IDのみをJSON形式で返す
   def show_current_user
-    user = User.find(user_id: @current_user.id)
-    render json: user
+    render json: { id: @current_user.id }
   end
 
   # POST /users
