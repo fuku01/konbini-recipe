@@ -21,4 +21,4 @@ COPY . /myapp
 EXPOSE 8000
 
 # コンテナ起動時に実行されるコマンド
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["rails", "server", "-b", "0.0.0.0", "-p", "8000"]
