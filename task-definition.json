@@ -1,7 +1,7 @@
 {
     "family": "konbini-recipe-task-family",
-    "executionRoleArn": "arn:aws:iam::770946742299:role/ecsTaskExecutionRole",
-    "taskRoleArn": "arn:aws:iam::770946742299:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::770946742299:role/allRole",
+    "taskRoleArn": "arn:aws:iam::770946742299:role/allRole",
     "networkMode": "awsvpc",
     "containerDefinitions": [
         {
