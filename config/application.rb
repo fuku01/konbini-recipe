@@ -25,6 +25,7 @@ module Myapp
     config.api_only = true
 
     config.hosts << "api.konbini-recipe.link"
+    config.hosts << /.*\.d3miw613xmog0z\.amplifyapp\.com/
 
     # CORSの設定を追加
     config.middleware.insert_before 0, Rack::Cors do
