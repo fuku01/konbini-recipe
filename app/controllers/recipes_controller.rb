@@ -1,6 +1,6 @@
 class RecipesController < ApplicationController
   # ユーザー認証をスキップする
-  skip_before_action :authenticate_user, only: [:index]
+  skip_before_action :authenticate_user, only: [:index, :show, :show_new_recipes]
 
   # GET /recipes
   # 全てのレシピを作成日の降順で取得し、JSON形式で返す
