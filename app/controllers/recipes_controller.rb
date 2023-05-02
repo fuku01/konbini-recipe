@@ -9,6 +9,12 @@ class RecipesController < ApplicationController
     render json: recipes
   end
 
+  # GET /new_recipes
+  def show_new_recipes
+    recipes = Recipe.all.order(created_at: :desc).limit(20)
+    render json: recipes
+  end
+
   # GET /recipes/1
   # 指定されたIDのレシピを取得し、JSON形式で返す
   def show
