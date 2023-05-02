@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   # Recipes
   get '/recipes', to: 'recipes#index'
+  get '/new_recipes', to: 'recipes#show_new_recipes'
   get '/user_recipes', to: 'recipes#show_user_recipes'
   post '/recipes', to: 'recipes#create'
   get '/recipes/:id', to: 'recipes#show'
