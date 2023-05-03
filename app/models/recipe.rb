@@ -6,4 +6,6 @@ class Recipe < ApplicationRecord
   validates :title, presence: true, length: { maximum: 40 }
   validates :content, presence: true, length: { maximum: 300 }
   validates :image, presence: true
+  validates :calorie, length: { maximum: 9999 }
+  validates :price, length: { maximum: 9999 }
 end
