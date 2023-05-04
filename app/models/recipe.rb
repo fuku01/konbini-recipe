@@ -3,6 +3,8 @@ class Recipe < ApplicationRecord
   has_many :barcodetags
   has_many :favorites
 
+  accepts_nested_attributes_for :barcodetags
+
   validates :title, presence: true, length: { maximum: 40 }
   validates :content, presence: true, length: { maximum: 1000 }
   validates :image, presence: true

@@ -34,6 +34,7 @@ class RecipesController < ApplicationController
   def create
     recipe = Recipe.new(recipe_params)
     recipe.user_id = @current_user.id
+
     if recipe.save
       render json: recipe, status: :created
     else
@@ -71,7 +72,9 @@ class RecipesController < ApplicationController
   private
 
   # レシピの情報を受け取る際に、許可されたパラメータのみを受け取るようにする
+  # barcodetags_attributesで、has_many関係にあるbarcodetagsの情報を受け取るようにする。これでbarcodetagsのアクションも同時に使える
   def recipe_params
-    params.require(:recipe).permit(:title, :content, :time, :price, :calorie, :image)
+    params.require(:recipe).permit(:title, :content, :time, :price, :calorie, :image,
+                                   barcodetags_attributes: [:barcode, :name,])
   end
 end
