@@ -75,6 +75,6 @@ class RecipesController < ApplicationController
   # barcodetags_attributesで、has_many関係にあるbarcodetagsの情報を受け取るようにする。これでbarcodetagsのアクションも同時に使える
   def recipe_params
     params.require(:recipe).permit(:title, :content, :time, :price, :calorie, :image,
-                                   barcodetags_attributes: [:barcode, :name,])
+                                   barcodetags_attributes: [:barcode, :name])
   end
 end
