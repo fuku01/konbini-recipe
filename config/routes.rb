@@ -18,13 +18,13 @@ Rails.application.routes.draw do
   patch '/recipes/:id', to: 'recipes#update'
   delete '/recipes/:id', to: 'recipes#destroy'
 
-  # Barcodetags
-  get '/barcodetags', to: 'barcodetags#index'
-  post '/barcodetags', to: 'barcodetags#create'
-  get '/barcodetags/:id', to: 'barcodetags#show'
-  put '/barcodetags/:id', to: 'barcodetags#update'
-  patch '/barcodetags/:id', to: 'barcodetags#update'
-  delete '/barcodetags/:id', to: 'barcodetags#destroy'
+  # tags
+  get '/tags', to: 'tags#index'
+  post '/tags', to: 'tags#create'
+  get '/tags/:id', to: 'tags#show'
+  put '/tags/:id', to: 'tags#update'
+  patch '/tags/:id', to: 'tags#update'
+  delete '/tags/:id', to: 'tags#destroy'
 
   # Favorites
   get '/favorites', to: 'favorites#index'

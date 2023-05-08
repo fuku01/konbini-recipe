@@ -72,10 +72,10 @@ class RecipesController < ApplicationController
   private
 
   # レシピの情報を受け取る際に、許可されたパラメータのみを受け取るようにする
-  # barcodetags_attributes（親要素と子要素を同時に作成・更新するための記述）で、
-  # has_many関係にあるbarcodetagsの情報を受け取るようにする。
+  # tags_attributes（親要素と子要素を同時に作成・更新するための記述）で、
+  # has_many関係にあるtagsの情報を受け取るようにする。
   def recipe_params
     params.require(:recipe).permit(:title, :content, :time, :price, :calorie, :image,
-                                   barcodetags_attributes: [:barcode, :name])
+                                   tags_attributes: [:name])
   end
 end
