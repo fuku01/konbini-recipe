@@ -2,10 +2,8 @@
 
 one:
   recipe: one
-  barcode: MyString
   name: MyString
 
 two:
   recipe: two
-  barcode: MyString
   name: MyString

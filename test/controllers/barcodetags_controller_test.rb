@@ -1,36 +1,36 @@
 require "test_helper"
 
-class BarcodetagsControllerTest < ActionDispatch::IntegrationTest
+class TagsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @barcodetag = barcodetags(:one)
+    @tag = tags(:one)
   end
 
   test "should get index" do
-    get barcodetags_url, as: :json
+    get tags_url, as: :json
     assert_response :success
   end
 
-  test "should create barcodetag" do
-    assert_difference("Barcodetag.count") do
-      post barcodetags_url, params: { barcodetag: { barcode: @barcodetag.barcode, name: @barcodetag.name, recipe_id: @barcodetag.recipe_id } }, as: :json
+  test "should create tag" do
+    assert_difference("Tag.count") do
+      post tags_url, params: { tag: { name: @tag.name, recipe_id: @tag.recipe_id } }, as: :json
     end
 
     assert_response :created
   end
 
-  test "should show barcodetag" do
-    get barcodetag_url(@barcodetag), as: :json
+  test "should show tag" do
+    get tag_url(@tag), as: :json
     assert_response :success
   end
 
-  test "should update barcodetag" do
-    patch barcodetag_url(@barcodetag), params: { barcodetag: { barcode: @barcodetag.barcode, name: @barcodetag.name, recipe_id: @barcodetag.recipe_id } }, as: :json
+  test "should update tag" do
+    patch tag_url(@tag), params: { tag: { name: @tag.name, recipe_id: @tag.recipe_id } }, as: :json
     assert_response :success
   end
 
-  test "should destroy barcodetag" do
-    assert_difference("Barcodetag.count", -1) do
-      delete barcodetag_url(@barcodetag), as: :json
+  test "should destroy tag" do
+    assert_difference("Tag.count", -1) do
+      delete tag_url(@tag), as: :json
     end
 
     assert_response :no_content
