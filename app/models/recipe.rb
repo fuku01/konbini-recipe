@@ -12,4 +12,15 @@ class Recipe < ApplicationRecord
   validates :image, presence: true
   validates :calorie, length: { maximum: 9999 }
   validates :price, length: { maximum: 9999 }
+
+  # タグの数が 5 以下であることを確認するカスタムバリデーションを追加
+  validate :tags_count_within_limit
+
+  private
+
+  def tags_count_within_limit
+    if tags.size > 5
+      errors.add(:tags, "は5個までしか追加できません")
+    end
+  end
 end
