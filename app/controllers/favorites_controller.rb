@@ -14,16 +14,28 @@ class FavoritesController < ApplicationController
   end
 
   # POST /favorites
-  # 新しいお気に入りを作成し、JSON形式で返す
+  # 指定されたレシピの新しいお気に入りを作成し、JSON形式で返す
   def create
-    favorite = Favorite.new(favorite_params)
+    favorite = Favorite.new(user_id: @current_user.id, recipe_id: params[:recipe_id])
 
     if favorite.save
-      render json: favorite, status: :created, location: favorite
+      render json: favorite, status: :created
     else
       render json: favorite.errors, status: :unprocessable_entity
     end
   end
+
+  # # POST /favorites
+  # # 新しいお気に入りを作成し、JSON形式で返す
+  # def create
+  #   favorite = Favorite.new(favorite_params)
+
+  #   if favorite.save
+  #     render json: favorite, status: :created, location: favorite
+  #   else
+  #     render json: favorite.errors, status: :unprocessable_entity
+  #   end
+  # end
 
   # PATCH/PUT /favorites/1
   # 指定されたIDのお気に入り情報を更新し、JSON形式で返す
