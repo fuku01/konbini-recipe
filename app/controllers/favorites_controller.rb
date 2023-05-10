@@ -6,16 +6,23 @@ class FavoritesController < ApplicationController
     render json: favorites
   end
 
-  # GET /favorites/1
-  # 指定されたIDのお気に入りを取得し、JSON形式で返す
-  def show
-    favorite = Favorite.find(params[:id])
-    render json: favorite
+  # # GET /favorites/1
+  # # 指定されたIDのお気に入りを取得し、JSON形式で返す
+  # def show
+  #   favorite = Favorite.find(params[:id])
+  #   render json: favorite
+  # end
+
+  # GET /isRecipe_favorite/recipe_id
+  # 指定されたレシピが現在のユーザーによってお気に入りに登録されているかどうかを確認し、true/falseを返す
+  def show_isRecipe_favorite
+    favorite = Favorite.exists?(user_id: @current_user.id, recipe_id: params[:recipe_id])
+    render json: { favorited: favorite }
   end
 
-  # GET /user_favorites
+  # GET /my_favorites
   # ログイン中のユーザーのお気に入りを作成日の降順で取得し、JSON形式で返す
-  def show_user_favorites
+  def show_my_favorites
     favorite = Favorite.where(user_id: @current_user.id).order(created_at: :desc)
     render json: favorite
   end
@@ -27,30 +34,6 @@ class FavoritesController < ApplicationController
 
     if favorite.save
       render json: favorite, status: :created
-    else
-      render json: favorite.errors, status: :unprocessable_entity
-    end
-  end
-
-  # # POST /favorites
-  # # 新しいお気に入りを作成し、JSON形式で返す
-  # def create
-  #   favorite = Favorite.new(favorite_params)
-
-  #   if favorite.save
-  #     render json: favorite, status: :created, location: favorite
-  #   else
-  #     render json: favorite.errors, status: :unprocessable_entity
-  #   end
-  # end
-
-  # PATCH/PUT /favorites/1
-  # 指定されたIDのお気に入り情報を更新し、JSON形式で返す
-  def update
-    favorite = Favorite.find(params[:id])
-
-    if favorite.update(favorite_params)
-      render json: favorite
     else
       render json: favorite.errors, status: :unprocessable_entity
     end

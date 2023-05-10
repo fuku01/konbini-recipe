@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   # Recipes
   get '/recipes', to: 'recipes#index'
   get '/new_recipes', to: 'recipes#show_new_recipes'
-  get '/user_recipes', to: 'recipes#show_user_recipes'
+  get '/my_recipes', to: 'recipes#show_my_recipes'
   post '/recipes', to: 'recipes#create'
   get '/recipes/:id', to: 'recipes#show'
   put '/recipes/:id', to: 'recipes#update'
@@ -30,7 +30,8 @@ Rails.application.routes.draw do
   get '/favorites', to: 'favorites#index'
   post '/favorites', to: 'favorites#create'
   get '/favorites/:id', to: 'favorites#show'
-  get '/user_favorites', to: 'favorites#show_user_favorites'
+  get '/isRecipe_favorite/:recipe_id', to: 'favorites#show_isRecipe_favorite'
+  get '/my_favorites', to: 'favorites#show_my_favorites'
   put '/favorites/:id', to: 'favorites#update'
   patch '/favorites/:id', to: 'favorites#update'
   delete '/favorites/:id', to: 'favorites#destroy'
