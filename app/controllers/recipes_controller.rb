@@ -23,7 +23,7 @@ class RecipesController < ApplicationController
   end
 
   # GET /user_recipes
-  # ログイン中のユーザーのマイレシピを取得し、JSON形式で返す
+  # ログイン中のユーザーのマイレシピを作成日の降順で取得し、JSON形式で返す
   def show_user_recipes
     recipes = Recipe.where(user_id: @current_user.id).order(created_at: :desc)
     render json: recipes

@@ -13,6 +13,13 @@ class FavoritesController < ApplicationController
     render json: favorite
   end
 
+  # GET /user_favorites
+  # ログイン中のユーザーのお気に入りを作成日の降順で取得し、JSON形式で返す
+  def show_user_favorites
+    favorite = Favorite.where(user_id: @current_user.id).order(created_at: :desc)
+    render json: favorite
+  end
+
   # POST /favorites
   # 指定されたレシピの新しいお気に入りを作成し、JSON形式で返す
   def create
