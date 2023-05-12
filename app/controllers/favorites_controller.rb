@@ -16,8 +16,12 @@ class FavoritesController < ApplicationController
   # GET /isRecipe_favorite/recipe_id
   # 指定されたレシピが現在のユーザーによってお気に入りに登録されているかどうかを確認し、true/falseを返す
   def show_isRecipe_favorite
-    favorite = Favorite.exists?(user_id: @current_user.id, recipe_id: params[:recipe_id])
-    render json: { favorited: favorite }
+    favorite = Favorite.find_by(user_id: @current_user.id, recipe_id: params[:recipe_id])
+    if favorite
+      render json: { favorited: true, favorite_id: favorite.id }
+    else
+      render json: { favorited: false }
+    end
   end
 
   # GET /my_favorites
@@ -43,7 +47,11 @@ class FavoritesController < ApplicationController
   # 指定されたIDのお気に入りを削除する
   def destroy
     favorite = Favorite.find(params[:id])
-    favorite.destroy
+    if favorite.user_id == @current_user.id
+      favorite.destroy
+    else
+      render json: { error: 'このお気に入りの削除権限がありません' }, status: :forbidden
+    end
   end
 
   private
