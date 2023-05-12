@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   post '/favorites', to: 'favorites#create'
   get '/favorites/:id', to: 'favorites#show'
   get '/isRecipe_favorite/:recipe_id', to: 'favorites#show_isRecipe_favorite'
+  get '/favorite_count/:recipe_id', to: 'favorites#show_favorite_count'
   get '/my_favorites', to: 'favorites#show_my_favorites'
   put '/favorites/:id', to: 'favorites#update'
   patch '/favorites/:id', to: 'favorites#update'

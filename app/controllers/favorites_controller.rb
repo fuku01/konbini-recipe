@@ -24,6 +24,12 @@ class FavoritesController < ApplicationController
     end
   end
 
+  # 指定されたレシピのお気に入り登録数を取得し、JSON形式で返す
+  def show_favorite_count
+    favorite = Favorite.where(recipe_id: params[:recipe_id]).count
+    render json: { favorite_count: favorite }
+  end
+
   # GET /my_favorites
   # ログイン中のユーザーのお気に入りを作成日の降順で取得し、JSON形式で返す
   def show_my_favorites
