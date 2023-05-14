@@ -23,10 +23,14 @@ class RecipesController < ApplicationController
   end
 
   # GET /my_recipes
-  # ログイン中のユーザーのマイレシピを作成日の降順で取得し、JSON形式で返す
+  # ログイン中のユーザーの投稿したレシピ情報を取得し、お気に入り登録されている数もカウントした結果を代入する
   def show_my_recipes
-    recipes = Recipe.where(user_id: @current_user.id).order(created_at: :desc)
-    render json: recipes
+    recipes = Recipe.where(user_id: @current_user.id)
+                    .select('recipes.*, COUNT(favorites.id) as favorites_count') # favoritesテーブルのidをカウントする
+                    .left_joins(:favorites) # レシピとfavoritesテーブルを結合する
+                    .group('recipes.id') # レシピごとにグループ化する
+                    .order(created_at: :desc) # 作成日の降順で並び替える
+    render json: recipes.as_json(include: [:tags], methods: :favorites_count)
   end
 
   # POST /recipes
