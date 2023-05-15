@@ -19,7 +19,8 @@ class Recipe < ApplicationRecord
   private
 
   def tags_count_within_limit
-    if tags.size > 5
+    puts tags
+    if tags.size > 10 # 削除５個＋追加５個＝最大１０個のリクエスト
       errors.add(:tags, "は5個までしか追加できません")
     end
   end
