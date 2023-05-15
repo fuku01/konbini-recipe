@@ -1,6 +1,6 @@
 class RecipesController < ApplicationController
   # ユーザー認証をスキップする
-  skip_before_action :authenticate_user, only: [:index, :show, :show_new_recipes]
+  skip_before_action :authenticate_user, only: [:index, :show, :show_new_recipes, :show_rank_recipes]
 
   # GET /recipes
   # 全てのレシピを作成日の降順で取得し、JSON形式で返す
@@ -14,6 +14,17 @@ class RecipesController < ApplicationController
   def show_new_recipes
     recipes = Recipe.all.order(created_at: :desc).limit(20)
     render json: recipes
+  end
+
+  # GET /rank_recipes
+  # いいねの数が多い順にレシピを２０件取得し、JSON形式で返す
+  def show_rank_recipes
+    recipes = Recipe.joins(:favorites) # レシピとfavoritesテーブルを結合する（いいねしてるものだけ）
+                    .select('recipes.*, COUNT(favorites.id) as favorites_count') # favoritesテーブルのidをカウントする（いいねの数を取得）
+                    .group('recipes.id') # レシピごとにグループ化する
+                    .order('favorites_count DESC') # favorites_countの降順で並び替える
+                    .limit(20) # 20件取得する
+    render json: recipes.as_json(methods: :favorites_count) # レシピ情報にfavorites_countを追加してJSON形式で返す
   end
 
   # GET /recipes/1

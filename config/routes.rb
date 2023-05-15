@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   # Recipes
   get '/recipes', to: 'recipes#index' # 全てのレシピを作成日の降順で取得し、JSON形式で返す
   get '/new_recipes', to: 'recipes#show_new_recipes' # 新着レシピを作成日の降順で取得し、JSON形式で返す
+  get '/rank_recipes', to: 'recipes#show_rank_recipes' # 人気レシピを作成日の降順で取得し、JSON形式で返す
   get '/my_recipes', to: 'recipes#show_my_recipes' # ログイン中のユーザーのレシピを作成日の降順で取得し、JSON形式で返す
   get '/favorite_recipes', to: 'recipes#show_favorite_recipes' # ログイン中のユーザーのお気に入りレシピを作成日の降順で取得し、JSON形式で返す
   post '/recipes', to: 'recipes#create' # 指定されたレシピを作成し、JSON形式で返す
