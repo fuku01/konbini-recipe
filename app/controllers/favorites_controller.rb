@@ -9,13 +9,6 @@ class FavoritesController < ApplicationController
     render json: favorites
   end
 
-  # # GET /favorites/1
-  # # 指定されたIDのお気に入りを取得し、JSON形式で返す
-  # def show
-  #   favorite = Favorite.find(params[:id])
-  #   render json: favorite
-  # end
-
   # GET /isRecipe_favorite/recipe_id
   # 指定されたレシピが現在のユーザーによってお気に入りに登録されているかどうかを確認し、true/falseを返す
   def show_isRecipe_favorite
@@ -31,13 +24,6 @@ class FavoritesController < ApplicationController
   def show_favorite_count
     favorite = Favorite.where(recipe_id: params[:recipe_id]).count
     render json: { favorite_count: favorite }
-  end
-
-  # GET /my_favorites
-  # ログイン中のユーザーのお気に入りを作成日の降順で取得し、JSON形式で返す
-  def show_my_favorites
-    favorite = Favorite.where(user_id: @current_user.id).order(created_at: :desc)
-    render json: favorite
   end
 
   # POST /favorites

@@ -10,6 +10,7 @@ class RecipesController < ApplicationController
   end
 
   # GET /new_recipes
+  # 新着レシピ２０件を取得し、JSON形式で返す
   def show_new_recipes
     recipes = Recipe.all.order(created_at: :desc).limit(20)
     render json: recipes
@@ -26,11 +27,22 @@ class RecipesController < ApplicationController
   # ログイン中のユーザーの投稿したレシピ情報を取得し、お気に入り登録されている数もカウントした結果を代入する
   def show_my_recipes
     recipes = Recipe.where(user_id: @current_user.id)
-                    .select('recipes.*, COUNT(favorites.id) as favorites_count') # favoritesテーブルのidをカウントする
-                    .left_joins(:favorites) # レシピとfavoritesテーブルを結合する
+                    .select('recipes.*, COUNT(favorites.id) as favorites_count') # favoritesテーブルのidをカウントする（いいねの数を取得）
+                    .left_joins(:favorites) # レシピとfavoritesテーブルを結合する（いいねしてないものも含む）
                     .group('recipes.id') # レシピごとにグループ化する
                     .order(created_at: :desc) # 作成日の降順で並び替える
-    render json: recipes.as_json(include: [:tags], methods: :favorites_count)
+    render json: recipes.as_json(methods: :favorites_count) # レシピ情報にfavorites_countを追加してJSON形式で返す
+  end
+
+  # GET /favorite_recipes
+  # ログイン中のユーザーのいいねしたレシピ情報を取得し、お気に入り登録されている数もカウントした結果を代入する
+  def show_favorite_recipes
+    recipes = Recipe.joins(:favorites) # レシピとfavoritesテーブルを結合する（いいねしてるものだけ）
+                    .where(favorites: { user_id: @current_user.id }) # favoritesテーブルのuser_idがログイン中のユーザーのIDと一致するレシピを取得する
+                    .select('recipes.*, COUNT(favorites.id) as favorites_count') # favoritesテーブルのidをカウントする（いいねの数を取得）
+                    .group('recipes.id') # レシピごとにグループ化する
+                    .order('favorites.created_at DESC') # favoritesテーブルの作成日の降順で並び替える
+    render json: recipes.as_json(methods: :favorites_count) # レシピ情報にfavorites_countを追加してJSON形式で返す
   end
 
   # POST /recipes
