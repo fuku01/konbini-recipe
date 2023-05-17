@@ -1,6 +1,7 @@
 class RecipesController < ApplicationController
   # ユーザー認証をスキップする
-  skip_before_action :authenticate_user, only: [:index, :show, :show_new_recipes, :show_rank_recipes]
+  skip_before_action :authenticate_user,
+                     only: [:index, :show, :show_new_recipes, :show_rank_recipes, :show_search_recipes]
 
   # GET /recipes
   # 全てのレシピを作成日の降順で取得し、JSON形式で返す
@@ -32,21 +33,17 @@ class RecipesController < ApplicationController
   def show_search_recipes
     search_words = params[:searchWords] # フロントから送られてきた検索ワードの配列
     recipes = Recipe.joins(:tags).left_joins(:favorites) # tagsテーブルと結合し、favoritesテーブルとも左結合を行う
-    # すべての検索ワードについてループを行う
-    search_words.each do |word|
+    search_words.each do |word| # すべての検索ワードについてループを行う
       # それぞれの検索ワードでレシピテーブルのtitleとcontent、およびtagsテーブルのnameを検索
-      recipes = recipes.where('title LIKE ?', "%#{word}%")
-                       .or(recipes.where('content LIKE ?', "%#{word}%"))
-                       .or(recipes.where('tags.name LIKE ?', "%#{word}%"))
+      recipes = recipes.where('title LIKE ?', "%#{word}%") # レシピのタイトルに検索ワードが含まれるものを取得
+                       .or(recipes.where('content LIKE ?', "%#{word}%")) # レシピの内容に検索ワードが含まれるものを取得
+                       .or(recipes.where('tags.name LIKE ?', "%#{word}%")) # タグの名前に検索ワードが含まれるものを取得
                        .order(created_at: :desc) # 作成日の降順で並び替える
     end
-    # 重複するレシピを削除して一意なレシピのみを保持
-    recipes = recipes.distinct
-    # レシピごとにお気に入りの数をカウント
-    recipes = recipes.select('recipes.*, COUNT(favorites.id) as favorites_count')
-                     .group('recipes.id')
-    # 検索結果をJSON形式で返す
-    render json: recipes.as_json(methods: :favorites_count)
+    recipes = recipes.distinct # 重複するレシピを削除して一意なレシピのみを保持する
+    recipes = recipes.select('recipes.*, COUNT(favorites.id) as favorites_count') # favoritesテーブルのidをカウントする（いいねの数を取得）
+                     .group('recipes.id') # レシピごとにグループ化する
+    render json: recipes.as_json(methods: :favorites_count) # レシピ情報にfavorites_countを追加してJSON形式で返す
   end
 
   # GET /recipes/1
