@@ -138,6 +138,7 @@ GEM
     nio4r (2.5.9)
     nokogiri (1.14.2-x86_64-linux)
       racc (~> 1.4)
+    pagy (6.0.4)
     parallel (1.22.1)
     parser (3.2.2.0)
       ast (~> 2.4.1)
@@ -238,6 +239,7 @@ DEPENDENCIES
   debug
   jwt
   mysql2 (~> 0.5)
+  pagy
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.4, >= 7.0.4.3)

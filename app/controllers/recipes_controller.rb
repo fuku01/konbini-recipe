@@ -1,7 +1,12 @@
 class RecipesController < ApplicationController
+  # pagyを使用するために必要
+  include Pagy::Backend
+  # include Pagy::Frontend
+
   # ユーザー認証をスキップする
   skip_before_action :authenticate_user,
-                     only: [:index, :show, :show_new_recipes, :show_rank_recipes, :show_search_recipes]
+                     only: [:index, :show, :show_new_recipes, :show_rank_recipes, :show_search_recipes,
+                            :show_search_recipes_by_favorite]
 
   # GET /recipes
   # 全てのレシピを作成日の降順で取得し、JSON形式で返す
@@ -20,21 +25,19 @@ class RecipesController < ApplicationController
   # GET /rank_recipes
   # いいねの数が多い順にレシピを２０件取得し、JSON形式で返す
   def show_rank_recipes
-    recipes = Recipe.joins(:favorites) # レシピとfavoritesテーブルを結合する（いいねしてるものだけ）
-                    .select('recipes.*, COUNT(favorites.id) as favorites_count') # favoritesテーブルのidをカウントする（いいねの数を取得）
-                    .group('recipes.id') # レシピごとにグループ化する
-                    .order('favorites_count DESC') # favorites_countの降順で並び替える
-                    .limit(20) # 20件取得する
-    render json: recipes.as_json(methods: :favorites_count) # レシピ情報にfavorites_countを追加してJSON形式で返す
+    recipes = Recipe.joins(:favorites)
+                    .select('recipes.*, COUNT(favorites.id) as favorites_count')
+                    .group('recipes.id')
+                    .order('favorites_count DESC')
+    render json: recipes.as_json(methods: :favorites_count)
   end
 
   # GET /search_recipes
   # リクエストで取得したsearchWordが、レシピの情報に含むレシピを取得し、JSON形式で返す
   def show_search_recipes
     search_words = params[:searchWords] # フロントから送られてきた検索ワードの配列
-    recipes = Recipe.joins(:tags).left_joins(:favorites) # tagsテーブルと結合し、favoritesテーブルとも左結合を行う
-    search_words.each do |word| # すべての検索ワードについてループを行う
-      # それぞれの検索ワードでレシピテーブルのtitleとcontent、およびtagsテーブルのnameを検索
+    recipes = Recipe.joins(:tags).left_joins(:favorites) # left_joins= レシピにいいねがない場合でも取得する
+    search_words.each do |word| # 検索ワードの配列を一つずつ取り出す
       recipes = recipes.where('title LIKE ?', "%#{word}%") # レシピのタイトルに検索ワードが含まれるものを取得
                        .or(recipes.where('content LIKE ?', "%#{word}%")) # レシピの内容に検索ワードが含まれるものを取得
                        .or(recipes.where('tags.name LIKE ?', "%#{word}%")) # タグの名前に検索ワードが含まれるものを取得
@@ -43,15 +46,15 @@ class RecipesController < ApplicationController
                      .group('recipes.id') # レシピごとにグループ化する
                      .order(created_at: :desc) # 作成日の降順で並び替える
                      .distinct # 重複するレシピを削除して一意なレシピのみを保持する
-
-    render json: recipes.as_json(methods: :favorites_count) # レシピ情報にfavorites_countを追加してJSON形式で返す
+    pagy, records = pagy(recipes) # ページネーションを行う
+    render json: { recipes: records.as_json(methods: :favorites_count), pagy: pagy } # レシピ情報にfavorites_countを追加してJSON形式で返す
   end
 
   # GET /search_recipes_by_favorite
   # リクエストで取得したsearchWordが、レシピの情報に含むレシピを取得し、JSON形式で返す【お気に入り順】
   def show_search_recipes_by_favorite
     search_words = params[:searchWords] # フロントから送られてきた検索ワードの配列
-    recipes = Recipe.joins(:tags).left_joins(:favorites) # tagsテーブルと結合し、favoritesテーブルとも左結合を行う
+    recipes = Recipe.joins(:tags).left_joins(:favorites) # left_joins= レシピにいいねがない場合でも取得する
     search_words.each do |word| # すべての検索ワードについてループを行う
       # それぞれの検索ワードでレシピテーブルのtitleとcontent、およびtagsテーブルのnameを検索
       recipes = recipes.where('title LIKE ?', "%#{word}%") # レシピのタイトルに検索ワードが含まれるものを取得
@@ -62,8 +65,8 @@ class RecipesController < ApplicationController
                      .group('recipes.id') # レシピごとにグループ化する
                      .order('favorites_count DESC') # いいねの数の降順で並び替える
                      .distinct # 重複するレシピを削除して一意なレシピのみを保持する
-
-    render json: recipes.as_json(methods: :favorites_count) # レシピ情報にfavorites_countを追加してJSON形式で返す
+    pagy, records = pagy(recipes, items: 20) # ページネーションを行う
+    render json: { recipes: records.as_json(methods: :favorites_count), pagy: pagy } # レシピ情報にfavorites_countを追加してJSON形式で返す
   end
 
   # GET /recipes/1
@@ -81,7 +84,8 @@ class RecipesController < ApplicationController
                     .left_joins(:favorites) # レシピとfavoritesテーブルを結合する（いいねしてないものも含む）
                     .group('recipes.id') # レシピごとにグループ化する
                     .order(created_at: :desc) # 作成日の降順で並び替える
-    render json: recipes.as_json(methods: :favorites_count) # レシピ情報にfavorites_countを追加してJSON形式で返す
+    pagy, records = pagy(recipes, items: 20) # ページネーションを行う
+    render json: { recipes: records.as_json(methods: :favorites_count), pagy: pagy } # レシピ情報にfavorites_countを追加してJSON形式で返す
   end
 
   # GET /favorite_recipes
@@ -92,7 +96,8 @@ class RecipesController < ApplicationController
                     .select('recipes.*, COUNT(favorites.id) as favorites_count') # favoritesテーブルのidをカウントする（いいねの数を取得）
                     .group('recipes.id') # レシピごとにグループ化する
                     .order('favorites.created_at DESC') # favoritesテーブルの作成日の降順で並び替える
-    render json: recipes.as_json(methods: :favorites_count) # レシピ情報にfavorites_countを追加してJSON形式で返す
+    pagy, records = pagy(recipes, items: 20) # ページネーションを行う
+    render json: { recipes: records.as_json(methods: :favorites_count), pagy: pagy } # レシピ情報にfavorites_countを追加してJSON形式で返す
   end
 
   # POST /recipes
