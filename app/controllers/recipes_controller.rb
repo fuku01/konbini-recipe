@@ -75,7 +75,7 @@ class RecipesController < ApplicationController
   # 指定されたIDのレシピを取得し、JSON形式で返す
   def show
     recipe = Recipe.find(params[:id])
-    render json: recipe.to_json(include: :tags) # タグ情報も含めてJSON形式で返す
+    render json: recipe.to_json(include: [:tags, :user]) # タグ情報とユーザー情報を含めてJSON形式で返す
   end
 
   # GET /my_recipes
