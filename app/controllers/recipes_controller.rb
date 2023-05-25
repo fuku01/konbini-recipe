@@ -28,7 +28,7 @@ class RecipesController < ApplicationController
     recipes = Recipe.joins(:favorites)
                     .select('recipes.*, COUNT(favorites.id) as favorites_count')
                     .group('recipes.id')
-                    .order('favorites_count DESC')
+                    .order('favorites_count DESC').limit(20)
     render json: recipes.as_json(methods: :favorites_count)
   end
 

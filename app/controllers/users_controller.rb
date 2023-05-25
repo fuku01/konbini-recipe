@@ -18,9 +18,9 @@ class UsersController < ApplicationController
   end
 
   # GET /me
-  # ログインしているユーザを取得し、IDのみをJSON形式で返す
+  # ログインしているユーザを取得し、IDとNameのみをJSON形式で返す
   def show_current_user
-    render json: { id: @current_user.id }
+    render json: { id: @current_user.id, name: @current_user.name }
   end
 
   # POST /users
@@ -29,7 +29,7 @@ class UsersController < ApplicationController
     token = params[:id_token]
     # トークンの解析をする
     payload, header = JWT.decode(token, nil, false)
-    user = User.new(firebase_uid: payload["user_id"])
+    user = User.new(firebase_uid: payload["user_id"], name: params[:name]) # payloadとは、トークンのペイロード部分のこと
     if user.save
       render json: user, status: :created
     else
@@ -37,10 +37,10 @@ class UsersController < ApplicationController
     end
   end
 
-  # PATCH/PUT /users/1
+  # PATCH/PUT /edit_me
   # 指定されたIDのユーザ情報を更新し、JSON形式で返す
   def update
-    user = User.find(params[:id])
+    user = User.find(@current_user.id)
 
     if user.update(user_params)
       render json: user
@@ -60,6 +60,6 @@ class UsersController < ApplicationController
 
   # ユーザの情報を受け取る際に、許可されたパラメータのみを受け取るようにする
   def user_params
-    params.require(:user).permit(:firebase_uid)
+    params.require(:user).permit(:firebase_uid, :name)
   end
 end
