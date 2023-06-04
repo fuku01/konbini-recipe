@@ -60,7 +60,7 @@ ___
     　
      
 4. **インフラ**
-    - AWS（Amplify、S3、ECR、ECS　Fargate、RDS、ALB、Route53）
+    - AWS（Amplify、S3、ECR、ECS　Fargate、RDS(MySQL)、ALB、Route53）
     - Github Actions（CI/CD）   
 
 
@@ -115,7 +115,7 @@ ___
 ___
 ### (6) 構成図など
 #### 1. インフラ構成図
-![konbini-recipe-AWS.jpg](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3192049/e83352dc-ae9f-be43-9981-27ae365b916d.jpeg)
+![konbini-recipe-AWS.jpg](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3192049/db1cdca4-1649-32c2-0c2e-8e0ac3f0ac36.jpeg)
 #### 2. ER図
 ![konbini-recipe-ER.jpg](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3192049/23046f08-f0d5-9beb-1ad4-bae24355fbdb.jpeg)
 #### 3.当初のデザイン案（figma）
@@ -209,10 +209,10 @@ ___
 　
 - **AWS Amplify**
     - 使用用途 ： フロントエンドのサーバーおよびCI/CDパイプライン
-    - 比較対象 ： EC2 
+    - 比較対象 ： EC2、ECS Fargate
     - 採用理由 ： 
-        - フロントエンドのプッシュからデプロイまでを自動化できる。
-        - プレビュー機能を使うことで、GitHub上のプルリクエストでマージする前にプレビュー確認が可能。
+        - ECS Fargateと比較して、フロントエンドのプッシュからデプロイまでを自動化できる。
+        - また、プレビュー機能を使うことで、GitHub上のプルリクエストでマージする前にプレビュー確認が可能。
         - EC2と比較して、サーバーに必要なリソース(処理能力やメモリなど)をAWSが自動的に調整してくれるため、手動でのサーバー管理の必要が無い。
         　
          
