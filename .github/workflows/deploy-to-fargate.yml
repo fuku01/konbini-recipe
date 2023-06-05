@@ -28,9 +28,16 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and push Docker image
+      - name: Build Docker image
         run: |
           docker build -t ${{ steps.login-ecr.outputs.registry }}/konbini-recipe-ecr -f Dockerfile .
+
+      - name: Run tests
+        run: |
+          docker run --rm ${{ steps.login-ecr.outputs.registry }}/konbini-recipe-ecr:latest bundle exec rspec
+
+      - name: Push Docker image
+        run: |
           docker push ${{ steps.login-ecr.outputs.registry }}/konbini-recipe-ecr:latest
 
       - name: Deploy to Amazon ECS
