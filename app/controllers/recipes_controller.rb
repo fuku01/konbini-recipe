@@ -1,19 +1,11 @@
 class RecipesController < ApplicationController
   # pagyを使用するために必要
   include Pagy::Backend
-  # include Pagy::Frontend
 
   # ユーザー認証をスキップする
   skip_before_action :authenticate_user,
                      only: [:index, :show, :show_new_recipes, :show_rank_recipes, :show_search_recipes,
                             :show_search_recipes_by_favorite]
-
-  # GET /recipes
-  # 全てのレシピを作成日の降順で取得し、JSON形式で返す
-  def index
-    recipes = Recipe.all.order(created_at: :desc)
-    render json: recipes
-  end
 
   # GET /new_recipes
   # 新着レシピ２０件を取得し、JSON形式で返す
@@ -71,13 +63,6 @@ class RecipesController < ApplicationController
     render json: { recipes: records.as_json(methods: :favorites_count), pagy: pagy } # レシピ情報にfavorites_countを追加してJSON形式で
   end
 
-  # GET /recipes/1
-  # 指定されたIDのレシピを取得し、JSON形式で返す
-  def show
-    recipe = Recipe.find(params[:id])
-    render json: recipe.to_json(include: [:tags, :user]) # タグ情報とユーザー情報を含めてJSON形式で返す
-  end
-
   # GET /my_recipes
   # ログイン中のユーザーの投稿したレシピ情報を取得し、お気に入り登録されている数もカウントした結果を代入する
   def show_my_recipes
@@ -114,6 +99,13 @@ class RecipesController < ApplicationController
       puts recipe.errors.inspect # Add this line to output error messages
       render json: recipe.errors, status: :unprocessable_entity
     end
+  end
+
+  # GET /recipes/1
+  # 指定されたIDのレシピを取得し、JSON形式で返す
+  def show
+    recipe = Recipe.find(params[:id])
+    render json: recipe.to_json(include: [:tags, :user]) # タグ情報とユーザー情報を含めてJSON形式で返す
   end
 
   # PATCH/PUT /recipes/1

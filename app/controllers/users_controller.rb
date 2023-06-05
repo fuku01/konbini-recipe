@@ -2,21 +2,6 @@ class UsersController < ApplicationController
   # ユーザー認証をスキップする(createのアクションのみ)
   skip_before_action :authenticate_user, only: [:create]
 
-  # ユーザー登録ページを表示し、JSON形式で返す
-  # GET /users
-  # 全てのユーザを取得し、JSON形式で返す
-  def index
-    users = User.all
-    render json: users
-  end
-
-  # GET /users/1
-  # 指定されたIDのユーザを取得し、JSON形式で返す
-  def show
-    user = User.find(params[:id])
-    render json: user
-  end
-
   # GET /me
   # ログインしているユーザを取得し、IDとNameのみをJSON形式で返す
   def show_current_user
@@ -47,13 +32,6 @@ class UsersController < ApplicationController
     else
       render json: user.errors, status: :unprocessable_entity
     end
-  end
-
-  # DELETE /users/1
-  # 指定されたIDのユーザを削除する
-  def destroy
-    user = User.find(params[:id])
-    user.destroy
   end
 
   private

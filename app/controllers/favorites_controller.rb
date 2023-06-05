@@ -2,13 +2,6 @@ class FavoritesController < ApplicationController
   # ユーザー認証をスキップする
   skip_before_action :authenticate_user, only: [:show_favorite_count]
 
-  # GET /favorites
-  # 全てのお気に入りを取得し、JSON形式で返す
-  def index
-    favorites = Favorite.all
-    render json: favorites
-  end
-
   # GET /isRecipe_favorite/recipe_id
   # 指定されたレシピが現在のユーザーによってお気に入りに登録されているかどうかを確認し、true/falseを返す
   def show_isRecipe_favorite
