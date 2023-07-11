@@ -28,11 +28,12 @@ class RecipesController < ApplicationController
   # リクエストで取得したsearchWordが、レシピの情報に含むレシピを取得し、JSON形式で返す
   def show_search_recipes
     search_words = params[:searchWords] # フロントから送られてきた検索ワードの配列
-    recipes = Recipe.left_joins(:tags).left_joins(:favorites) # left_joins= レシピにいいねがない場合でも取得する
+    recipes = Recipe.left_joins(:tags).left_joins(:favorites).left_joins(:user) # left_joins= レシピにいいねがない場合でも取得する
     search_words.each do |word| # 検索ワードの配列を一つずつ取り出す
       recipes = recipes.where('title LIKE ?', "%#{word}%") # レシピのタイトルに検索ワードが含まれるものを取得
                        .or(recipes.where('content LIKE ?', "%#{word}%")) # レシピの内容に検索ワードが含まれるものを取得
                        .or(recipes.where('tags.name LIKE ?', "%#{word}%")) # タグの名前に検索ワードが含まれるものを取得
+                       .or(recipes.where('users.name LIKE ?', "%#{word}%")) # ユーザーの名前に検索ワードが含まれるものを取得
     end
     favorites_subquery = '(SELECT COUNT(*) FROM favorites WHERE favorites.recipe_id = recipes.id)' # サブクエリを使用していいねの数を取得
     recipes = recipes.select("recipes.*, #{favorites_subquery} as favorites_count") # favoritesテーブルのidをカウントする（いいねの数を取得）
@@ -47,12 +48,13 @@ class RecipesController < ApplicationController
   # リクエストで取得したsearchWordが、レシピの情報に含むレシピを取得し、JSON形式で返す【お気に入り順】
   def show_search_recipes_by_favorite
     search_words = params[:searchWords] # フロントから送られてきた検索ワードの配列
-    recipes = Recipe.left_joins(:tags).left_joins(:favorites) # left_joins= レシピにいいねがない場合でも取得する
+    recipes = Recipe.left_joins(:tags).left_joins(:favorites).left_joins(:user) # left_joins= レシピにいいねがない場合でも取得する
     search_words.each do |word| # すべての検索ワードについてループを行う
       # それぞれの検索ワードでレシピテーブルのtitleとcontent、およびtagsテーブルのnameを検索
       recipes = recipes.where('title LIKE ?', "%#{word}%") # レシピのタイトルに検索ワードが含まれるものを取得
                        .or(recipes.where('content LIKE ?', "%#{word}%")) # レシピの内容に検索ワードが含まれるものを取得
                        .or(recipes.where('tags.name LIKE ?', "%#{word}%")) # タグの名前に検索ワードが含まれるものを取得
+                       .or(recipes.where('users.name LIKE ?', "%#{word}%")) # ユーザーの名前に検索ワードが含まれるものを取得
     end
     favorites_subquery = '(SELECT COUNT(*) FROM favorites WHERE favorites.recipe_id = recipes.id)' # サブクエリを使用していいねの数を取得
     recipes = recipes.select("recipes.*, #{favorites_subquery} as favorites_count") # favoritesテーブルのidをカウントする（いいねの数を取得）
